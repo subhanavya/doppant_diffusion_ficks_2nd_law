@@ -1,13 +1,10 @@
-% dopant_diffusion_advanced.m
-% Advanced simulation of dopant diffusion in silicon (VLSI fabrication)
-% Includes temperature variation + auto-saving of figures
-% Author: <Your Name>
-% Date: <Insert Date>
+
 
 clc; clear; close all;
 
-%% Parameters
-C_s = 1e21;     % surface concentration [atoms/cm^3] (constant-source)
+%% Parameters can change 
+
+C_s = 1e21;     % surface concentration [atoms/cm^3]
 C_b = 1e15;     % background concentration [atoms/cm^3]
 D0 = 10.5;      % diffusion prefactor [cm^2/s]
 Ea = 3.69;      % activation energy [eV]
@@ -26,7 +23,7 @@ end
 for T = temps
     D = D0 * exp(-Ea/(kB*T)); % diffusion coefficient at this T
     
-    % ---- Constant-source diffusion ----
+    % ---- Frist Constant-source diffusion ----
     fig1 = figure('Color','w'); hold on; grid on;
     for t = t_vec
         C = C_s * erfc(x./(2*sqrt(D*t)));
@@ -38,7 +35,7 @@ for T = temps
     legend('Location','southwest');
     saveas(fig1, sprintf('results/constant_diffusion_%dC.png',T-273));
     
-    % ---- Junction depth vs. time ----
+    % ---- Junction depth vs. Time ----
     xj = sqrt(4*D*t_vec) .* erfcinv(C_b/C_s); % junction depth
     fig2 = figure('Color','w'); 
     plot(t_vec/60, xj*1e4,'o-','LineWidth',1.5);
@@ -47,7 +44,7 @@ for T = temps
     grid on;
     saveas(fig2, sprintf('results/junction_depth_%dC.png',T-273));
     
-    % ---- Limited-source diffusion ----
+    % ---- second  limited diffusion source  ----
     Q = 1e14; % total dopant dose [atoms/cm^2]
     fig3 = figure('Color','w'); hold on; grid on;
     for t = t_vec
